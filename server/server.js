@@ -21,6 +21,15 @@ app.post('/todos', (req, res) => {
   });
 });
 
+
+app.get('/todos', (req,res) =>{
+    Todo.find().then((todos) => {
+        var status = "Success";
+        res.send({status,todos});
+    }, (e) => { res.status(500).send({error: 'Unable to fetch data'})})
+
+});
+
 app.listen(3000, () => {
   console.log('Started on port 3000');
 });
