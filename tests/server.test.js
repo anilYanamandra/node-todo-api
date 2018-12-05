@@ -1,11 +1,12 @@
 const expect = require('expect');
 const request = require('supertest');
-
+const {ObjectID} = require('mongodb'); 
 
 const {Todo} = require('../server/models/todo');
 const {app} = require('../server/server');
+const id = new ObjectID(); 
 
-const todos = [{text: 'Sample Todo1'}, {text: 'SampleTodo2'}, {text: 'SampleTodo2'}];
+const todos = [{text: 'Sample Todo1'}, {text: 'SampleTodo2'}, {text: 'SampleTodo2', _id: id}];
 
 
 beforeEach((done) => {
@@ -71,3 +72,37 @@ describe('Get /Todos' , ()=> {
         }).end(done);
     })
 }); 
+
+
+
+describe('Get /todos/:id ', (done) => {
+    it('Should get one Todo based on id ',(done) => {
+        var url = '/todos/'+id; 
+        //console.log(url);
+        request(app)
+        .get(url)
+        .expect(200)
+        .end(done);
+    }); 
+
+    it('Should throw 404 if Object id is not found', () => {
+        var url = '/todos/'+ new ObjectID().toHexString(); 
+        //console.log(url);
+        request(app)
+        .get(url)
+        .expect(404)
+        .end(done);
+
+    }) ; 
+
+
+    if('Should Throw 400 if Invalid Object is passed ', () => {
+
+        var url = '/todos/123'; 
+
+        request(app)
+        .get(url)
+        .expect(400)
+        .end(done);
+    }); 
+})
