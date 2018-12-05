@@ -78,31 +78,28 @@ describe('Get /Todos' , ()=> {
 describe('Get /todos/:id ', (done) => {
     it('Should get one Todo based on id ',(done) => {
         var url = '/todos/'+id; 
-        //console.log(url);
         request(app)
         .get(url)
         .expect(200)
         .end(done);
-    }); 
+    })
+   
+    it('Should throw 400 if Object id is invalid', (done) => {
+        var url = '/todos/123'; 
+        request(app)
+        .get(url)
+        .expect(400)
+        .end(done);
 
-    it('Should throw 404 if Object id is not found', () => {
-        var url = '/todos/'+ new ObjectID().toHexString(); 
-        //console.log(url);
+    }) 
+
+    it('Should throw 404 if Object id is not found', (done) => {
+        var objid = new ObjectID();
+        var url = '/todos/'+ objid.toHexString(); 
         request(app)
         .get(url)
         .expect(404)
         .end(done);
 
-    }) ; 
-
-
-    if('Should Throw 400 if Invalid Object is passed ', () => {
-
-        var url = '/todos/123'; 
-
-        request(app)
-        .get(url)
-        .expect(400)
-        .end(done);
-    }); 
-})
+    });
+});
