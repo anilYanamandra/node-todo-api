@@ -133,3 +133,39 @@ describe('Delete /todos/:id ', (done) => {
 
     });
 });
+
+
+
+describe('Patch /todos/:id ', (done) => {
+    it('Should Delete one Todo based on id ',(done) => {
+        var url = '/todos/'+id; 
+        request(app)
+        .patch(url)
+        .send({completed: true})
+        .expect(200)
+        .expect((res)=> {
+            expect(res.body.todo.completed).toBe(true);
+            expect(res.body.todo.completedAt).toBeA('number');
+        })
+        .end(done);
+    })
+   
+    it('Should throw 400 if Object id is invalid', (done) => {
+        var url = '/todos/123'; 
+        request(app)
+        .patch(url).send({completed: false})
+        .expect(400)
+        .end(done);
+
+    }) 
+
+    it('Should throw 404 if Object id is not found', (done) => {
+        var objid = new ObjectID();
+        var url = '/todos/'+ objid.toHexString(); 
+        request(app)
+        .patch(url).send({completed:false})
+        .expect(404)
+        .end(done);
+
+    });
+});
