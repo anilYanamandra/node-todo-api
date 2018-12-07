@@ -120,6 +120,26 @@ app.patch('/todos/:id', (req, res) => {
 
 })
 
+
+
+app.post('/users', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+
+  var user = new User(body);
+  user.save().then((user)=> {
+    var status = 'Success';
+    res.send({status,user});
+  },(err)=> {
+    console.log(err);
+    var status = 'Failure';
+    var message = 'Unable to create user '
+    if(err.errmsg.indexOf('E11000') >-1) {
+      message = 'Email Already Taken.'
+    }
+    res.status(400).send({status,message});
+  })
+});
+
 app.listen(PORT, () => {
   console.log(`Started on port ${PORT}`);
 });
